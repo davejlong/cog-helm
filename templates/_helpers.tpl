@@ -38,3 +38,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- define "nginx.fullname" -}}
 {{- printf "%s-%s" .Release.Name "nginx" | trunc 63 -}}
 {{- end -}}
+
+{{/*
+Create a default fully qualified postgresql name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "postgresql.fullname" -}}
+{{- printf "%s-%s" .Release.Name "postgresql" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
+Create the URL for connecting to postgresql
+*/}}
+{{- define "postgresql.url" -}}
+{{ $releasename := include "postgresql.fullname" . }}
+{{- printf "ecto://%s:%s@%s:5432/%s" .Values.postgresql.postgresUser .Values.postgresql.postgresPassword (include "postgresql.fullname" .) .Values.databaseName | b64enc | quote -}}
+{{- end -}}

@@ -52,6 +52,8 @@ spec:
         - name: RELAY_DOCKER_REGISTRY_EMAIL
           value: {{ .Values.docker.registryEmail | quote }}
         {{- end }}
+        - name: DOCKER_API_VERSION
+          value: "1.23"
       volumes:
       - name: docker-socket
         hostPath:
